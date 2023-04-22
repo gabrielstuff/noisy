@@ -5,8 +5,11 @@
 </template>
 
 <script setup lang="ts">
+import {createNoise2D} from 'simplex-noise'
+import Perlin from 'perlin.js'
 import { ref, watch, onMounted } from 'vue'
 import { useNoiseStore } from '../stores/noise'
+const noise2D = createNoise2D()
 
 const store = useNoiseStore()
 
@@ -38,18 +41,42 @@ const drawNoise = () => {
 }
 
 const applyNoise = (ctx: CanvasRenderingContext2D) => {
-  const { noiseAmount, noiseOpacity } = store.noiseSettings
+  const { noiseAmount, noiseOpacity, noiseType, backgroundColor } = store.noiseSettings
+
+  ctx.fillStyle = backgroundColor
+  ctx.fillRect(0, 0, width.value, height.value)
 
   const imageData = ctx.getImageData(0, 0, width.value, height.value)
   const data = imageData.data
 
-  for (let i = 0; i < data.length; i += 4) {
-    const noiseValue = Math.random()
-    const alpha = noiseValue * noiseAmount * 255 * noiseOpacity
-    data[i + 3] = alpha
+  const scale = 100 / noiseAmount
+
+  for (let y = 0; y < height.value; y++) {
+    for (let x = 0; x < width.value; x++) {
+      const i = (y * width.value + x) * 4
+
+      let noiseValue
+      if (noiseType === 'perlin') {
+        noiseValue = Perlin.perlin2(x * scale, y * scale)
+      } else {
+        noiseValue = noise2D(x * scale, y * scale)
+      }
+
+      const alpha = (noiseValue + 1) * 0.5 * 255
+      data[i + 3] = alpha
+    }
   }
 
-  ctx.putImageData(imageData, 0, 0)
+  const noiseLayer = new ImageData(data, width.value, height.value)
+  const offscreenCanvas = new OffscreenCanvas(width.value, height.value)
+  const offscreenCtx = offscreenCanvas.getContext('2d')
+  offscreenCtx?.putImageData(noiseLayer, 0, 0)
+
+  ctx.globalAlpha = noiseOpacity
+  ctx.globalCompositeOperation = 'lighter'
+  ctx.drawImage(offscreenCanvas, 0, 0)
+  ctx.globalCompositeOperation = 'source-over'
+  ctx.globalAlpha = 1
 }
 
 watch(store, () => {

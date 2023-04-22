@@ -1,13 +1,10 @@
 <template>
-  <main>
-    <div class="container">
-      <h1>Générateur de texture de bruit</h1>
-      <ImageUploader/>
-      <NoiseSettings/>
-      <DownloadButton/>
-      <PreviewArea/>
-    </div>
-  </main>
+  <div class="container">
+    <ImageUploader/>
+    <NoiseSettings/>
+    <DownloadButton/>
+    <PreviewArea/>
+  </div>
 </template>
 
 <script setup lang="ts">

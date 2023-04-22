@@ -1,4 +1,14 @@
 <template>
+  <div class="fixed bottom-4 left-1/2 transform-gpu -translate-x-1/2 bg-gray-200 dark:bg-gray-800 p-4 rounded-full min-w-[300px] max-w-1/2 space-x-4 flex justify-center items-center">
+    <button class="i-carbon-sun dark:i-carbon-moon text-xl text-red"></button>
+    <button class="i-carbon-settings text-xl text-red"></button>
+    <button class="i-carbon-paint-brush text-xl text-red" ></button>
+    <button class="i-carbon-image text-xl text-red"></button>
+    <button class="i-carbon-download text-xl text-red"></button>
+  </div>
+  <div class="fixed inset-0 pointer-events-none">
+      <svg class="w-full h-full" ref="svgContainer"></svg>
+  </div>
   <fieldset>
     <legend>Paramètres du bruit</legend>
 
@@ -17,7 +27,6 @@
       <select v-model="noiseType">
         <option value="simplex">Simplex</option>
         <option value="perlin">Perlin</option>
-        <!-- Ajoutez d'autres types de bruit de la bibliothèque thi.ng ici -->
       </select>
     </label>
 
@@ -57,6 +66,7 @@ const isTransparent = ref(false)
 const backgroundColor = ref('#ffffff')
 const width = ref(512)
 const height = ref(512)
+const svgContainer = ref(null)
 
 watchEffect(() => {
   const settings: NoiseSettings = {

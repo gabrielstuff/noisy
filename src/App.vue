@@ -1,14 +1,18 @@
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+    <RouterLink to="/">
+      <img alt="Noisy logo" class="" src="@/assets/logo.svg" width="125" height="125" />
+    </RouterLink>
   </header>
-  <RouterView />
+  <main>
+    <RouterView />
+  </main>
+  <footer>
+    <h1>Noisy - an opensource and simple to use noise texture generator</h1>
+    <nav>
+      <RouterLink to="/about">About</RouterLink>
+    </nav>
+  </footer>
 </template>
 
 <script setup lang="ts">
